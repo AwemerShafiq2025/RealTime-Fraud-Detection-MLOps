@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import pickle
 import numpy as np
+from prometheus_fastapi_instrumentator import Instrumentator # <-- Nayi Library Import ki
 
 # Initialize FastAPI App
 app = FastAPI(
@@ -9,6 +10,10 @@ app = FastAPI(
     description="API for detecting fraudulent financial transactions using MLOps.",
     version="1.0.0"
 )
+
+# --- NAYA STEP: Prometheus Metrics Expose karna ---
+Instrumentator().instrument(app).expose(app)
+# --------------------------------------------------
 
 # Load the trained Model and Scaler
 try:
@@ -22,7 +27,7 @@ except Exception as e:
 
 # Define the input data format using Pydantic
 class TransactionData(BaseModel):
-    # Expecting 30 features as used in our trained model (V1-V28, Time, Amount)
+    # Expecting 30 features
     features: list[float]
 
 @app.get("/")
