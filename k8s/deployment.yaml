@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fraud-detection-deployment
+  namespace: fraud-detection-system
+  labels:
+    app: fraud-api
+spec:
+  # ReplicaSet requirement: Running 3 multiple pods for High Availability
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fraud-api
+  template:
+    metadata:
+      labels:
+        app: fraud-api
+    spec:
+      containers:
+      - name: fraud-api-container
+        image: fraud-detection-api:latest
+        imagePullPolicy: Never # Tells K8s to use the local Docker image we built
+        ports:
+        - containerPort: 8000
