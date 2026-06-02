@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 5s # Har 5 seconds baad data collect karega
+
+scrape_configs:
+  - job_name: 'fraud-detection-api'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['host.docker.internal:8000'] # Local machine par chalne wali API ka address
